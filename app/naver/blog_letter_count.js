@@ -25,8 +25,7 @@
 // @match        *://post.naver.com/viewer/postView*
 // @match        *://m.post.editor.naver.com/editor*
 // @match        *://m.post.naver.com/viewer/postView*
-// @grant        AddStyle
-// @require      https://github.com/zerostrength/userscript/raw/master/assets/vendor/app.js
+// @grant        GM_addStyle
 // @require      https://github.com/zerostrength/userscript/raw/master/assets/vendor/add-style.js
 // @require      https://github.com/zerostrength/userscript/raw/master/assets/lib/smart-editor-one.js
 // ==/UserScript==
@@ -35,8 +34,24 @@
 // @author zerostrength
 // ==/OpenUserJS==
 // ---------------------
-App(async function main() {
-    AddStyle(`
+(function(window) {
+    window.GM_App = function(callback, preload) {
+      function _requestIdleCallback(callback) {
+          if(typeof requestIdleCallback == 'undefined') return setTimeout(callback, 1000);
+          return requestIdleCallback(callback);
+      }
+      function checkForDOM() {
+        let container = document.body;
+        if(preload == 1) container = document.head;
+        if(preload == 2) container = document.documentElement;
+        return container ? callback() : _requestIdleCallback(checkForDOM);
+      }
+      _requestIdleCallback(checkForDOM);
+    }
+  })(window);
+
+GM_App(async function main() {
+    GM_addStyle(`
       head { display: block !important; }
       .se-utils > ul > li > button { margin-top: 14px !important; }
       .se-util-button[data-text]::after { content: attr(data-text); transition-property: opacity; transition-duration: .3s; transition-timing-function: cubic-bezier(.19,1,.22,1); position: absolute; top: 0; right: 100%; bottom: 0; height: 12px; margin: auto 10px auto 0; font-size: 12px; color: #00c73c; white-space: nowrap; opacity: 1; }

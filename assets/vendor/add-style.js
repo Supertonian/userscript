@@ -26,5 +26,5 @@
       element.onload = function() { container.removeChild(element); };
       setTimeout(function(){ container.removeChild(element); }, 300);
     }
-    window.AddStyle = window.AddStyle || window.inject_css;
+    window.GM_addStyle = window.GM_addStyle || window.inject_css;
   })(window);
